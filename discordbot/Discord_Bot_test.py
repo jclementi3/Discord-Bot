@@ -14,7 +14,7 @@ with open('Discord_Bot_Token.txt', 'r') as reader:
 client = Bot(command_prefix=BOT_PREFIX)
 
 
-@client.command(name='dice')
+@client.command(name='dice')  # command that rolls dice
 async def roll_dice(ctx, dice: str):
     total_roll = []
     num_dice = int(dice.split('d')[0])
@@ -27,7 +27,7 @@ async def roll_dice(ctx, dice: str):
     await ctx.send(str(rolling))
 
 
-@client.command(name='8ball')
+@client.command(name='8ball')  # command that answers yes or no questions
 async def eight_ball(ctx):
     possible_responses = [
         'That is an ASTOUNDING NOPE!',
@@ -38,9 +38,8 @@ async def eight_ball(ctx):
     await ctx.send(random.choice(possible_responses) + ", " + ctx.message.author.mention)
 
 
-@client.command()
+@client.command()  # command that will square a number
 async def square(ctx, number: int):
-
     squared_value = int(number)**2
     await ctx.send(str(number) + " squared is " + str(squared_value))
 
@@ -65,17 +64,24 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == client.user:  # bot doesnt respond to itself
         return
 
+    palandrome = message.content.lower()  # used in palandrome check
+    palandrome = str(palandrome.replace(" ", ""))
+    ispalandrome = palandrome[::-1]  # reversed palandrome
     sarcasm = message.content.lower()
-    print(sarcasm)
+    # print(sarcasm)
     sarcasm = str(sarcasm.replace("'", "").replace("’", ""))
-    print(sarcasm[1])
-    print(sarcasm)
-
+    # print(sarcasm[1]) #testing why replace isnt working right
+    # print(sarcasm) #iphone apostrophe char is different than single quote
+    print(palandrome)
+    print(ispalandrome)
     if sarcasm.startswith('im '):
         await message.channel.send(f"Hi {sarcasm[2:]}, I'm Test Bot, and I'm the dad joke master")
+
+    if palandrome == ispalandrome:  # checks if a word is a palandrome
+        await message.channel.send("T-A-C-O-C-A-T... TACOCAT, TACOCAT!!!!")
 
     await client.process_commands(message)
 
